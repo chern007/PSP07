@@ -35,7 +35,7 @@ public class PSP07_tarea {
 
         Scanner entrada = new Scanner(System.in);
 
-        System.out.println("Por favor, introduce tu número de usuario:");
+        System.out.println("Por favor, introduce tu nombre de usuario:");
         String nombreUsuario = entrada.nextLine();
         System.out.println("Por favor, introduce tu contraseña:");
         String contraseñaUsuario = entrada.nextLine();
