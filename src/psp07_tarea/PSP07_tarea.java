@@ -9,13 +9,19 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 import java.util.Scanner;
 import java.util.logging.Level;
@@ -63,24 +69,69 @@ public class PSP07_tarea {
             cifrador.init(Cipher.ENCRYPT_MODE, clave);
 
             //declaración  de objetos
-            FileOutputStream fs = new FileOutputStream("fichero.cifrado"); //fichero de salida
+            FileOutputStream fos = new FileOutputStream("fichero.cifrado"); //fichero de salida
 
             byte[] textoCifrado = cifrador.doFinal(textoSinCifrar.getBytes());
 
-            System.out.println("2) TEXTO CIFRADO");
+            System.out.println("2) TEXTO CIFRADO (HEXADECIMAL)");
 
             //------------------------------------------------------------------
-            // Se escribe byte a byte en hexadecimal el texto
-            // encriptado para ver su pinta.
+            // pasamos a hexadecimal el texto
             for (byte b : textoCifrado) {
                 System.out.print(Integer.toHexString(0xFF & b));
             }
             System.out.println();
-            //------------------------------------------------------------------            
+            //------------------------------------------------------------------           
 
-            fs.write(textoCifrado);
+            fos.write(textoCifrado);
 
-            fs.close();
+            fos.close();
+
+            //**************************************************************************************
+            //***PASAMOS A DESENCRIPTAR EL CONTENIDO DEL ARCHIVO PARA PODERLO IMPRIMIR EN VENTANA***
+            //**************************************************************************************
+            cifrador.init(Cipher.DECRYPT_MODE, clave); 
+            
+            byte[] bufferDescifrado;
+            Path ruta = Paths.get("fichero.cifrado");
+            byte[] bufferCifrado = Files.readAllBytes(ruta);
+            
+            bufferDescifrado = cifrador.doFinal(bufferCifrado); //Completa el descifrado
+            
+            System.out.println("3) TEXTO DESCIFRADO DEL ARCHIVO CIFRADO:\n" + new String(bufferDescifrado));
+            
+            
+            
+//            FileInputStream fis = new FileInputStream("fichero.cifrado");
+//            int bytesLeidos;
+//            byte[] bufferDescifrado;
+//            byte[] bufferCifrado = new byte[1024]; //array de bytes
+//            //lee el fichero de 1k en 1k y pasa los fragmentos leidos al cifrador
+//            bytesLeidos = fis.read(bufferCifrado, 0, 1024);
+//            
+//            
+//            while (bytesLeidos != -1) {//mientras no se llegue al final del fichero
+//                //pasa texto cifrado al cifrador y lo descifra, asignándolo a bufferClaro
+//                bufferDescifrado = cifrador.update(bufferCifrado, 0, bytesLeidos);                
+//                bytesLeidos = fis.read(bufferCifrado, 0, 1024);
+//            }
+//            bufferDescifrado = cifrador.doFinal(); //Completa el descifrado
+//            
+//            System.out.println("3) TEXTO DEL ARCHIVO DESCIFRADO:\n" + new String(bufferDescifrado));
+            
+
+
+
+
+
+
+//            cifrador.init(Cipher.DECRYPT_MODE, clave);
+//            
+//            byte[] nuevoTextoSinCifrar = cifrador.doFinal(textoCifrado);
+//            
+//            System.out.println("3) TEXTO DESCIFRADO:\n" + new String(nuevoTextoSinCifrar));
+
+
 
         } catch (NoSuchAlgorithmException ex) {
             Logger.getLogger(PSP07_tarea.class.getName()).log(Level.SEVERE, null, ex);
@@ -104,17 +155,17 @@ public class PSP07_tarea {
 
         char[] abecedario = {'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'ñ', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z'};
 
-        String palabra = "";
+        String cadena = "";
 
-        int numeroDeLetras = new Random().nextInt(25);//25 maxima logitud de la palabra      
+        int numeroDeLetras = new Random().nextInt(25);//5 letras maxima logitud de la palabra      
 
         for (int i = 0; i < numeroDeLetras; i++) {
 
-            palabra += abecedario[new Random().nextInt(27)];
+            cadena += abecedario[new Random().nextInt(27)];
 
         }
 
-        return palabra;
+        return cadena;
     }
 
 }
