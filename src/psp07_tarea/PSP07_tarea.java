@@ -68,7 +68,7 @@ public class PSP07_tarea {
             System.out.println("2) TEXTO CIFRADO (HEXADECIMAL)");
 
             //------------------------------------------------------------------
-            // pasamos a hexadecimal el texto
+            // pasamos a hexadecimal el texto para imprimirlo caracter a caracter
             for (byte b : textoCifrado) {
                 System.out.print(Integer.toHexString(0xFF & b));
             }
@@ -88,56 +88,33 @@ public class PSP07_tarea {
             Path ruta = Paths.get("fichero.cifrado");
             byte[] bufferCifrado = Files.readAllBytes(ruta);
             
-            bufferDescifrado = cifrador.doFinal(bufferCifrado); //Completa el descifrado
+            bufferDescifrado = cifrador.doFinal(bufferCifrado); //desciframos todos los bytes
             
             System.out.println("3) TEXTO DESCIFRADO DEL ARCHIVO CIFRADO:\n" + new String(bufferDescifrado));
             
-            
-            
-//            FileInputStream fis = new FileInputStream("fichero.cifrado");
-//            int bytesLeidos;
-//            byte[] bufferDescifrado;
-//            byte[] bufferCifrado = new byte[1024]; //array de bytes
-//            //lee el fichero de 1k en 1k y pasa los fragmentos leidos al cifrador
-//            bytesLeidos = fis.read(bufferCifrado, 0, 1024);
-//            
-//            
-//            while (bytesLeidos != -1) {//mientras no se llegue al final del fichero
-//                //pasa texto cifrado al cifrador y lo descifra, asignándolo a bufferClaro
-//                bufferDescifrado = cifrador.update(bufferCifrado, 0, bytesLeidos);                
-//                bytesLeidos = fis.read(bufferCifrado, 0, 1024);
-//            }
-//            bufferDescifrado = cifrador.doFinal(); //Completa el descifrado
-//            
-//            System.out.println("3) TEXTO DEL ARCHIVO DESCIFRADO:\n" + new String(bufferDescifrado));
-            
 
-
-
-
-
-
-//            cifrador.init(Cipher.DECRYPT_MODE, clave);
-//            
-//            byte[] nuevoTextoSinCifrar = cifrador.doFinal(textoCifrado);
-//            
-//            System.out.println("3) TEXTO DESCIFRADO:\n" + new String(nuevoTextoSinCifrar));
-
-
-
+        //controlamos e identificamos todas las excepciones
+        
         } catch (NoSuchAlgorithmException ex) {
+            System.err.println("El algoritmo de cifrado no está disponible.");
             Logger.getLogger(PSP07_tarea.class.getName()).log(Level.SEVERE, null, ex);
         } catch (NoSuchPaddingException ex) {
+            System.err.println("El algoritmo de cifrado no está disponible.");
             Logger.getLogger(PSP07_tarea.class.getName()).log(Level.SEVERE, null, ex);
         } catch (InvalidKeyException ex) {
-            Logger.getLogger(PSP07_tarea.class.getName()).log(Level.SEVERE, null, ex);
+            System.err.println("La clave no es correcta.");
+            Logger.getLogger(PSP07_tarea.class.getName()).log(Level.SEVERE, null, ex);            
         } catch (IllegalBlockSizeException ex) {
+            System.err.println("La longitud de la clave no es de 128 bits.");
             Logger.getLogger(PSP07_tarea.class.getName()).log(Level.SEVERE, null, ex);
         } catch (BadPaddingException ex) {
+            System.err.println("La clave no es correcta.");
             Logger.getLogger(PSP07_tarea.class.getName()).log(Level.SEVERE, null, ex);
         } catch (FileNotFoundException ex) {
+            System.err.println("No se ha podido encontrar el fichero.");
             Logger.getLogger(PSP07_tarea.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (IOException ex) {
+        } catch (IOException ex) {            
+            System.err.println("No se ha podido acceder al fichero.");
             Logger.getLogger(PSP07_tarea.class.getName()).log(Level.SEVERE, null, ex);
         }
 
@@ -148,8 +125,13 @@ public class PSP07_tarea {
         char[] abecedario = {'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'ñ', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z'};
 
         String cadena = "";
+        
+        //la cadena tendrá una longitud de entre 5 y 25 caracteres
+        
+        int min = 5;
+        int max = 25;       
 
-        int numeroDeLetras = new Random().nextInt(25);//5 letras maxima logitud de la palabra      
+        int numeroDeLetras = new Random().nextInt(max-min) + min;     
 
         for (int i = 0; i < numeroDeLetras; i++) {
 
